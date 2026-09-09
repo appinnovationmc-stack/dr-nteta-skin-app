@@ -1,0 +1,10 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#1B3F9E"/><title>Dr Nteta Skin App</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/><style>
+:root{--b:#1B3F9E;--c:#00AEEF;--cl:#E8F7FD;--bg:#F5F7FB;--m:#6B7A90;--nb:60px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:#0B1220;font-family:'Open Sans',sans-serif;color:#1A2332;overflow:hidden}
+button,input,select,textarea{font:inherit}button{border:0;background:0;cursor:pointer;color:inherit}a{color:inherit;text-decoration:none}
+.app{width:min(100vw,420px);height:100dvh;margin:0 auto;background:var(--bg);position:relative;display:flex;flex-direction:column;overflow:hidden}
+.screen{display:none;flex:1;flex-direction:column;min-height:0}.screen.on{display:flex}
+.scroll{flex:1;overflow:auto;padding-bottom:calc(var(--nb)+var(--sb)+12px)}
+.ey{font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+.h{font-family:Montserrat,sans-serif;font-weight:800;color:var(--b)}.mu{color:var(--m);font-size:12px;line-height:1.4}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 14px;border-radius:12px;font-family:
