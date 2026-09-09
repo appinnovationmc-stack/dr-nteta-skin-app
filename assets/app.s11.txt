@@ -1,0 +1,8 @@
+000 – R85 000','Pretoria plastic desk'],['Tummy tuck','R75 000 – R140 000','Pretoria plastic desk'],['Skin concern','R850 – R2 500','Dr Nteta desk']]},
+hips:{t:'Hips/BBL',p:[['BBL','R80 000 – R150 000','Pretoria plastic desk'],['Flank lipo','R40 000 – R80 000','Pretoria plastic desk']]},
+thighs:{t:'Thighs',p:[['Thigh lipo','R40 000 – R75 000','Pretoria plastic desk'],['Skin plan','R850 – R2 000','Dr Nteta desk']]}};function nav(){document.querySelectorAll('[data-n]').forEach(el=>{const a=el.dataset.n;el.innerHTML=`<nav class="nav">${N.map(i=>`<button class="ni${i===a?' on':''}" onclick="go('${i}')"><span>${i[0].toUpperCase()+i.slice(1)}</span></button>`).join('')}</nav>`})}
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById('s-'+id).classList.add('on');id==='scan'?start():stop()}
+let tt;function toast(m){const e=document.getElementById('t');e.textContent=m;e.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('on'),2200)}
+function add(){cart++;toast('Added — '+cart+' item'+(cart>1?'s':''))}
+function filt(b,k){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.shop').forEach(c=>c.style.display=(k==='all'||c.dataset.b===k)?'block':'none')}
+function tab(x){document.getElementById('am').className='btn '+(x==='am'?'bp':'bo');document.getElementById('pm').className='btn '+(x==='pm'?'bp':'bo');document.getElementById('sam').class

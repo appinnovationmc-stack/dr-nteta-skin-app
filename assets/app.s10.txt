@@ -1,0 +1,9 @@
+<div class="h" style="font-size:15px" id="zt">Zone</div></div><div class="scroll" id="zb"></div><div data-n="consult"></div></section><div class="toast" id="t"></div></div><script>
+const WA='https://wa.me/27123207901',N=['home','scan','shop','consult','routine'];let cart=0,stream=null,on=0,LQ=null,ZP=[];const D={dry:{c:'Dryness & Eczema',d:'Barrier may be weak — common on Highveld.',p:[['Kind2Skin','Cream Ultra','R96'],['Kind2Skin','Ointment','R80']],s:0},
+acne:{c:'Acne & Blemishes',d:'Excess sebum clogging pores.',p:[['Pimplex','Cleanser','R69,95'],['Pimplex','Cream','R84,95']],s:0},
+eczema:{c:'Sensitive / Eczema',d:'Inflamed itchy patches — see Dr Nteta if persistent.',p:[['Kind2Skin','Cream Ultra','R96'],['Kind2Skin','Ointment','R80']],s:1},
+razor:{c:'Razor Bumps',d:'Ingrown hairs after shaving.',p:[['Shavrex','Bump Ultra','R69,56']],s:0},
+pigment:{c:'Hyperpigmentation',d:'Darker marks — often post-acne or sun.',p:[['Pimplex','Cream','R84,95']],s:1}};const Z={face:{t:'Face',p:[['Face toxin','R2 500 – R4 500','Dr Nteta desk'],['Medical peel','R1 200 – R3 000','Dr Nteta desk'],['Derm consult','R850 – R1 500','Dr Nteta desk'],['Facelift','R85 000 – R160 000','Pretoria plastic desk']]},
+chest:{t:'Chest',p:[['Chest peel plan','R1 500 – R3 500','Dr Nteta desk'],['Medical derm','R850 – R2 000','Dr Nteta desk']]},
+arms:{t:'Arms',p:[['Arm skin plan','R850 – R2 000','Dr Nteta desk'],['Arm lipo','R35 000 – R65 000','Pretoria plastic desk']]},
+abdomen:{t:'Tummy',p:[['Tummy lipo','R45 
