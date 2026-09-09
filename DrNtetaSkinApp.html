@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1B3F9E">
+<title>Dr Nteta Skin App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1B3F9E;
+  --blue-dk:#15327A;
+  --cyan:#00AEEF;
+  --cyan-lt:#E6F7FD;
+  --ink:#1A1A2E;
+  --ink2:#2D2D44;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg:#F8FAFC;
+  --white:#FFFFFF;
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px);
+  --r:12px;
+  --r-lg:16px;
+  --shadow:0 4px 20px rgba(27,63,158,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Open Sans',system-ui,sans-serif;
+  background:#0F172A;
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;min-height:100dvh;
+}
+.phone{
+  width:100%;max-width:430px;height:100vh;height:100dvh;
+  background:var(--bg);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+@media(min-width:520px){
+  body{padding:24px;}
+  .phone{height:812px;max-height:90vh;border-radius:40px;box-shadow:0 25px 50px -12px rgba(0,0,0,.4);border:8px solid #1e293b;}
+}
+.status{
+  height:calc(44px + var(--safe-t));padding-top:var(--safe-t);
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding-left:24px;padding-right:24px;padding-bottom:6px;
+  font-size:12px;font-weight:600;color:var(--ink);z-index:50;flex-shrink:0;
+  background:var(--bg);
+}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;position:relative;}
+.screen.active{display:flex;}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(80px + var(--safe-b));scrollbar-width:none;}
+.scroll::-webkit-scrollbar{display:none;}
+#toast{
+  position:absolute;bottom:calc(90px + var(--safe-b));left:16px;right:16px;
+  background:var(--ink);color:#fff;padding:14px 18px;border-radius:var(--r);
+  font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(12px);
+  transition:all .25s ease;pointer-events:none;text-align:center;
+}
+#toast.show{opacity:1;transform:translateY(0);}
+.t-eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.t-display{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.2;}
+.t-display-sm{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1.25;}
+.t-display-xs{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:600;color:var(--ink);line-height:1.3;}
+.t-body{font-size:14px;color:var(--muted);line-height:1.6;}
+.t-small{font-size:12px;color:var(--muted);line-height:1.5;}
+.t-price{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:var(--blue);}
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--blue);color:#fff;border:none;border-radius:10px;
+  padding:14px 24px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;
+  letter-spacing:.3px;cursor:pointer;transition:background .2s,transform .1s;
+}
+.btn-primary:active{transform:scale(.98);background:var(--blue-dk);}
+.btn-cyan{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--cyan);color:#fff;border:none;border-radius:10px;
+  padding:14px 24px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;
+}
+.btn-outline{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:transparent;color:var(--blue);border:1.5px solid var(--blue);
+  border-radius:10px;padding:12px 22px;font-family:'Montserrat',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;
+}
+.btn-ghost{background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:'Open Sans',sans-serif;}
+.bnav{
+  position:absolute;bottom:0;left:0;right:0;
+  height:calc(64px + var(--safe-b));padding-bottom:var(--safe-b);
+  background:rgba(255,255,255,.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(0,0,0,.06);
+  display:flex;z-index:80;
+}
+.bnav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  border:none;background:none;cursor:pointer;font-family:'Montserrat',sans-serif;
+  color:var(--muted);padding-top:8px;
+}
+.bnav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+.bnav-item span{font-size:10px;font-weight:600;letter-spacing:.2px;}
+.bnav-item.on{color:var(--blue);}
+.bnav-item.on svg{stroke:var(--blue);}
+#s-splash{
+  background:linear-gradient(160deg,var(--blue) 0%,#0F2A6B 100%);
+  color:#fff;align-items:center;justify-content:center;text-align:center;padding:40px 32px;
+}
+.splash-mark{
+  width:88px;height:88px;border-radius:24px;background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;margin-bottom:28px;
+  border:1px solid rgba(255,255,255,.25);
+}
+.splash-monogram{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:700;letter-spacing:-1px;}
+.splash-wordmark{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;line-height:1.25;margin-bottom:10px;}
+.splash-sub{font-size:15px;opacity:.85;margin-bottom:48px;}
+.splash-actions{width:100%;display:flex;flex-direction:column;gap:12px;}
+.splash-actions .btn-primary{background:#fff;color:var(--blue);}
+.splash-actions .btn-outline{border-color:rgba(255,255,255,.5);color:#fff;}
+.home-hero{
+  background:linear-gradient(135deg,var(--blue),#15327A);
+  color:#fff;padding:28px 24px 32px;border-radius:0 0 28px 28px;
+}
+.home-hero .t-display{color:#fff;font-size:24px;}
+.home-hero .t-body{color:rgba(255,255,255,.8);}
+.card{
+  background:var(--white);border-radius:var(--r-lg);padding:18px;margin:0 16px 14px;
+  box-shadow:var(--shadow);border:1px solid var(--line);
+}
+.card-row{display:flex;align-items:center;gap:14px;}
+.card-icon{
+  width:48px;height:48px;border-radius:14px;background:var(--cyan-lt);
+  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
+}
+.point-pill{
+  display:inline-flex;align-items:center;gap:6px;background:var(--cyan);
+  color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;
+  padding:6px 12px;border-radius:999px;letter-spacing:.3px;
+}
+.scan-preview{
+  position:relative;background:#0F172A;margin:16px;border-radius:20px;overflow:hidden;
+  aspect-ratio:3/4;max-height:420px;
+}
+#scanVideo,#scanCanvas{width:100%;height:100%;object-fit:cover;display:block;}
+#scanCanvas{display:none;}
+.scan-overlay{
+  position:absolute;inset:0;border:2px solid rgba(0,174,239,.5);border-radius:20px;
+  pointer-events:none;
+}
+.scan-guide{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:70%;height:55%;border:2px dashed rgba(255,255,255,.4);border-radius:16px;
+}
+.scan-actions{display:flex;gap:12px;padding:0 16px 16px;justify-content:center;}
+.figure-wrap{padding:12px 16px;text-align:center;}
+.body-map{
+  position:relative;width:220px;height:420px;margin:0 auto;
+  background:linear-gradient(180deg,#E8F4FC 0%,#D6ECFA 100%);
+  border-radius:110px 110px 40px 40px / 60px 60px 40px 40px;
+  border:2px solid #B8D9F0;
+}
+.zone{
+  position:absolute;border-radius:50%;background:rgba(0,174,239,.25);
+  border:2px solid var(--cyan);cursor:pointer;transition:transform .15s,background .15s;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--blue);font-family:'Montserrat',sans-serif;
+}
+.zone:active,.zone.on{background:var(--cyan);color:#fff;transform:scale(1.08);}
+.zone-face{width:56px;height:56px;top:18px;left:82px;}
+.zone-neck{width:40px;height:28px;top:78px;left:90px;border-radius:12px;}
+.zone-chest{width:70px;height:48px;top:120px;left:75px;border-radius:16px;}
+.zone-arms{width:36px;height:70px;top:140px;border-radius:18px;}
+.zone-arms.l{left:18px;} .zone-arms.r{right:18px;}
+.zone-abs{width:64px;height:56px;top:190px;left:78px;border-radius:14px;}
+.zone-hips{width:90px;height:40px;top:250px;left:65px;border-radius:20px;}
+.zone-thighs{width:40px;height:70px;top:300px;border-radius:16px;}
+.zone-thighs.l{left:50px;} .zone-thighs.r{right:50px;}
+.pzone-list{padding:8px 16px 24px;}
+.pzone-card{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .15s;
+}
+.pzone-card:active{border-color:var(--cyan);}
+.pzone-card .desk{
+  display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;padding:4px 8px;border-radius:6px;margin-top:8px;
+}
+.desk-nteta{background:#E0F2FE;color:var(--blue);}
+.desk-plastic{background:#FEF3C7;color:#92400E;}
+.rec-card{
+  background:var(--white);border-radius:var(--r-lg);margin:0 16px 12px;padding:16px;
+  display:flex;gap:14px;border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.shop-card{display:flex;gap:14px;background:var(--white);border-radius:var(--r-lg);
+  padding:14px;margin:0 16px 12px;border:1px solid var(--line);}
+.shop-img{width:64px;height:64px;border-radius:12px;background:var(--cyan-lt);
+  display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.filter-row{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;}
+.f-chip{
+  flex-shrink:0;padding:8px 16px;border-radius:999px;font-family:'Montserrat',sans-serif;
+  font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--white);
+  color:var(--muted);cursor:pointer;
+}
+.f-chip.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+.form-group{margin:0 16px 14px;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;font-family:'Montserrat',sans-serif;}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;
+  font-family:'Open Sans',sans-serif;font-size:14px;background:var(--white);color:var(--ink);
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--cyan);
+}
+.step-row{display:flex;gap:12px;margin:0 16px 12px;align-items:flex-start;}
+.step-num{
+  width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.step-card{flex:1;background:var(--white);border-radius:var(--r);padding:14px;border:1px solid var(--line);}
+.t-tab{flex:1;padding:10px;text-align:center;border-radius:8px;font-family:'Montserrat',sans-serif;
+  font-size:12px;font-weight:600;color:var(--muted);border:none;background:none;cursor:pointer;}
+.t-tab.on{background:var(--blue);color:#fff;}
+.disclaimer{font-size:11px;color:var(--muted);padding:12px 16px;line-height:1.5;text-align:center;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status"><span>9:41</span><span>■■■ ▓</span></div>
+  <div id="toast"></div>
+
+  <div class="screen active" id="s-splash">
+    <div class="splash-mark"><div class="splash-monogram">DN</div></div>
+    <div class="splash-wordmark">Dr Nteta<br>Skin App</div>
+    <div class="splash-sub">Your dermatologist, in your pocket</div>
+    <div class="splash-actions">
+      <button class="btn-primary" style="width:100%" onclick="go('home')">Get Started</button>
+      <button class="btn-outline" style="width:100%" onclick="go('home')">Sign In</button>
+      <p style="text-align:center;font-size:12px;opacity:.7;margin-top:8px">Dr Leslie Nteta · Pretoria Central & Brooklyn</p>
+    </div>
+  </div>
+
+  <div class="screen" id="s-home">
+    <div class="scroll">
+      <div class="home-hero">
+        <div class="t-eyebrow" style="color:rgba(255,255,255,.7);margin-bottom:8px">Good day</div>
+        <div class="t-display">How can we help<br>your skin today?</div>
+        <p class="t-body" style="margin-top:10px">Scan · Shop · Book · POINT body quotes</p>
+      </div>
+      <div style="height:18px"></div>
+      <div class="card" onclick="go('scan')" style="cursor:pointer">
+        <div class="card-row">
+          <div class="card-icon">📷</div>
+          <div>
+            <div class="t-display-xs">Skin Scan</div>
+            <div class="t-small">Analyse a concern with live camera</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="go('point')" style="cursor:pointer;border-color:var(--cyan)">
+        <div class="card-row">
+          <div class="card-icon" style="background:#E0F2FE">📍</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <div class="t-display-xs">Body · POINT</div>
+              <span class="point-pill">NEW</span>
+            </div>
+            <div class="t-small">Tap a zone → procedure + SA price + desk</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="go('shop')" style="cursor:pointer">
+        <div class="card-row">
+          <div class="card-icon">🧴</div>
+          <div>
+            <div class="t-display-xs">Shop K2S · Pimplex · Shavrex</div>
+            <div class="t-small">Clinic-range products for SA skin</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="go('consult')" style="cursor:pointer">
+        <div class="card-row">
+          <div class="card-icon">🩺</div>
+          <div>
+            <div class="t-display-xs">Book a Consult</div>
+            <div class="t-small">Dr Leslie Nteta · Pretoria</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="go('routine')" style="cursor:pointer">
+        <div class="card-row">
+          <div class="card-icon">📋</div>
+          <div>
+            <div class="t-display-xs">7-Day Routine</div>
+            <div class="t-small">AM / PM plan from the clinic</div>
+          </div>
+        </div>
+      </div>
+      <p class="disclaimer">Quotes are estimates only. Not a medical invoice or diagnosis. Always confirm with the clinic.</p>
+    </div>
+    <div class="bnav" id="nav-home"></div>
+  </div>
+
+  <div class="screen" id="s-scan">
+    <div style="padding:12px 20px 0">
+      <div class="t-eyebrow">Skin Scan</div>
+      <div class="t-display-sm">Capture a concern</div>
+    </div>
+    <div class="scan-preview">
+      <video id="scanVideo" playsinline muted autoplay></video>
+      <canvas id="scanCanvas"></canvas>
+      <div class="scan-overlay"><div class="scan-guide"></div></div>
+      <div id="scanPlaceholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);font-size:14px;text-align:center;padding:20px">
+        Camera needs HTTPS or localhost.<br>Tap Start Camera.
+      </div>
+    </div>
+    <div class="scan-actions">
+      <button class="btn-outline" onclick="startCamera()">Start Camera</button>
+      <button class="btn-primary" onclick="captureScan()">Capture & Analyse</button>
+    </div>
+    <div class="bnav" id="nav-scan"></div>
+  </div>
+
+  <div class="screen" id="s-results">
+    <div class="scroll" id="results-body"></div>
+    <div class="bnav" id="nav-results"></div>
+  </div>
+
+  <div class="screen" id="s-point">
+    <div style="padding:12px 20px 0;display:flex;align-items:center;gap:12px">
+      <button class="btn-ghost" onclick="go('home')">← Back</button>
+      <div>
+        <div class="t-eyebrow">Body · POINT</div>
+        <div class="t-display-sm" style="font-size:18px">Tap a zone</div>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="figure-wrap">
+        <div class="body-map" id="bodyMap">
+          <div class="zone zone-face" data-zone="face" onclick="selectZone(this)">Face</div>
+          <div class="zone zone-neck" data-zone="neck" onclick="selectZone(this)">Neck</div>
+          <div class="zone zone-chest" data-zone="chest" onclick="selectZone(this)">Chest</div>
+          <div class="zone zone-arms l" data-zone="arms" onclick="selectZone(this)">Arm</div>
+          <div class="zone zone-arms r" data-zone="arms" onclick="selectZone(this)">Arm</div>
+          <div class="zone zone-abs" data-zone="abs" onclick="selectZone(this)">Abs</div>
+          <div class="zone zone-hips" data-zone="hips" onclick="selectZone(this)">Hips</div>
+          <div class="zone zone-thighs l" data-zone="thighs" onclick="selectZone(this)">Thigh</div>
+          <div class="zone zone-thighs r" data-zone="thighs" onclick="selectZone(this)">Thigh</div>
+        </div>
+      </div>
+      <div class="pzone-list" id="pzoneList">
+        <p class="t-body" style="text-align:center;padding:12px">Select a body zone to see procedures, SA price bands and which desk handles the quote.</p>
+      </div>
+      <p class="disclaimer">All prices are indicative SA Rand bands (2025/26). Final quote after consultation. Medical disclaimer applies.</p>
+    </div>
+    <div class="bnav" id="nav-point"></div>
+  </div>
+
+  <div class="screen" id="s-shop">
+    <div style="padding:12px 20px 0">
+      <div class="t-eyebrow">Shop</div>
+      <div class="t-display-sm">K2S · Pimplex · Shavrex</div>
+    </div>
+    <div class="filter-row">
+      <button class="f-chip on" onclick="filt(this,'all')">All</button>
+      <button class="f-chip" onclick="filt(this,'k2s')">Kind2Skin</button>
+      <button class="f-chip" onclick="filt(this,'pimplex')">Pimplex</button>
+      <button class="f-chip" onclick="filt(this,'shavrex')">Shavrex</button>
+    </div>
+    <div class="scroll" id="shop-list">
+      <div class="shop-card" data-b="k2s">
+        <div class="shop-img">🧴</div>
+        <div style="flex:1">
+          <div class="t-small" style="color:var(--blue);font-weight:600">Kind2Skin</div>
+          <div class="t-display-xs" style="font-size:15px">Cream Ultra</div>
+          <div class="t-small">Dry / eczema-prone · 400g</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="t-price">R96,00</div>
+            <button class="btn-primary" style="padding:8px 14px;font-size:12px" onclick="addCart(event)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card" data-b="k2s">
+        <div class="shop-img">🫙</div>
+        <div style="flex:1">
+          <div class="t-small" style="color:var(--blue);font-weight:600">Kind2Skin</div>
+          <div class="t-display-xs" style="font-size:15px">Ointment Base</div>
+          <div class="t-small">Night barrier repair</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="t-price">R80,00</div>
+            <button class="btn-primary" style="padding:8px 14px;font-size:12px" onclick="addCart(event)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card" data-b="pimplex">
+        <div class="shop-img">🧼</div>
+        <div style="flex:1">
+          <div class="t-small" style="color:var(--blue);font-weight:600">Pimplex</div>
+          <div class="t-display-xs" style="font-size:15px">Clarifying Cleanser</div>
+          <div class="t-small">Acne & oil balance · 125ml</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="t-price">R69,95</div>
+            <button class="btn-primary" style="padding:8px 14px;font-size:12px" onclick="addCart(event)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card" data-b="pimplex">
+        <div class="shop-img">💊</div>
+        <div style="flex:1">
+          <div class="t-small" style="color:var(--blue);font-weight:600">Pimplex</div>
+          <div class="t-display-xs" style="font-size:15px">Pimplex Cream</div>
+          <div class="t-small">Pimples & blackheads</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="t-price">R84,95</div>
+            <button class="btn-primary" style="padding:8px 14px;font-size:12px" onclick="addCart(event)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card" data-b="shavrex">
+        <div class="shop-img">🪒</div>
+        <div style="flex:1">
+          <div class="t-small" style="color:var(--blue);font-weight:600">Shavrex</div>
+          <div class="t-display-xs" style="font-size:15px">Bump Solution Ultra</div>
+          <div class="t-small">Razor bumps & ingrowns · 30ml</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="t-price">R69,56</div>
+            <button class="btn-primary" style="padding:8px 14px;font-size:12px" onclick="addCart(event)">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bnav" id="nav-shop"></div>
+  </div>
+
+  <div class="screen" id="s-consult">
+    <div class="scroll">
+      <div style="padding:16px 20px 0">
+        <div class="t-eyebrow">Consult</div>
+        <div class="t-display-sm">Dr Leslie Nteta</div>
+        <p class="t-body" style="margin-top:8px">MBBCh · Dermatologist · Pretoria Central & Brooklyn</p>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="t-display-xs" style="margin-bottom:8px">Services</div>
+        <div class="t-small">• Medical dermatology<br>• Aesthetic injectables (toxin / fillers)<br>• Chemical peels & skin rejuvenation<br>• Acne, eczema, pigmentation pathways</div>
+      </div>
+      <div class="card">
+        <div class="t-display-xs" style="margin-bottom:8px">Locations</div>
+        <div class="t-small">Pretoria Central · Brooklyn / Menlyn area</div>
+      </div>
+      <div style="padding:8px 16px 24px">
+        <button class="btn-primary" style="width:100%" onclick="go('book')">Book Consultation</button>
+        <button class="btn-outline" style="width:100%;margin-top:10px" onclick="openWhatsApp('General consult enquiry')">WhatsApp Clinic</button>
+      </div>
+    </div>
+    <div class="bnav" id="nav-consult"></div>
+  </div>
+
+  <div class="screen" id="s-book">
+    <div class="scroll">
+      <div style="padding:12px 20px 0;display:flex;align-items:center;gap:12px">
+        <button class="btn-ghost" onclick="go('consult')">← Back</button>
+        <div>
+          <div class="t-eyebrow">Book / Quote</div>
+          <div class="t-display-sm" style="font-size:18px">Request</div>
+        </div>
+      </div>
+      <div id="quoteBanner" style="display:none;margin:12px 16px;padding:14px;background:var(--cyan-lt);border-radius:12px;border:1px solid var(--cyan)">
+        <div class="t-display-xs" id="quoteTitle" style="color:var(--blue)"></div>
+        <div class="t-small" id="quoteMeta" style="margin-top:4px"></div>
+      </div>
+      <div class="form-group">
+        <label>Full name</label>
+        <input type="text" id="bk-name" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label>Mobile</label>
+        <input type="tel" id="bk-phone" placeholder="+27 …">
+      </div>
+      <div class="form-group">
+        <label>Preferred location</label>
+        <select id="bk-loc">
+          <option>Pretoria Central</option>
+          <option>Brooklyn / Menlyn</option>
+          <option>Either</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes / concern</label>
+        <textarea id="bk-notes" rows="3" placeholder="Optional details"></textarea>
+      </div>
+      <div style="padding:8px 16px 24px;display:flex;flex-direction:column;gap:10px">
+        <button class="btn-primary" style="width:100%" onclick="submitBook()">Send booking request</button>
+        <button class="btn-cyan" style="width:100%" onclick="submitWhatsApp()">Send via WhatsApp</button>
+        <p class="t-small" style="text-align:center">Clinic WhatsApp: +27 12 320 7901</p>
+      </div>
+    </div>
+    <div class="bnav" id="nav-book"></div>
+  </div>
+
+  <div class="screen" id="s-routine">
+    <div style="padding:12px 20px 0">
+      <div class="t-eyebrow">Routine</div>
+      <div class="t-display-sm">7-day AM / PM</div>
+    </div>
+    <div style="display:flex;gap:8px;padding:12px 16px">
+      <button class="t-tab on" id="tab-am" onclick="switchTab('am')">Morning</button>
+      <button class="t-tab" id="tab-pm" onclick="switchTab('pm')">Evening</button>
+    </div>
+    <div class="scroll">
+      <div id="steps-am">
+        <div class="step-row"><div class="step-num">1</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Cleanse</div><div class="t-small">Pimplex Clarifying Cleanser · 60s</div></div></div>
+        <div class="step-row"><div class="step-num">2</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Treat</div><div class="t-small">Targeted serum / Pimplex Cream if active</div></div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Moisturise</div><div class="t-small">Kind2Skin Cream Ultra</div></div></div>
+        <div class="step-row"><div class="step-num">4</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Protect</div><div class="t-small">SPF 30+ every morning</div></div></div>
+      </div>
+      <div id="steps-pm" style="display:none">
+        <div class="step-row"><div class="step-num">1</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Double cleanse</div><div class="t-small">Remove SPF / makeup then cleanser</div></div></div>
+        <div class="step-row"><div class="step-num">2</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Active</div><div class="t-small">Pimplex Cream or prescribed active</div></div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Deep moisture</div><div class="t-small">Kind2Skin Ointment Base</div></div></div>
+        <div class="step-row"><div class="step-num">4</div><div class="step-card"><div class="t-display-xs" style="font-size:14px">Post-shave</div><div class="t-small">Shavrex Bump Solution on shaved areas</div></div></div>
+      </div>
+      <div class="card" style="margin-top:8px" onclick="go('consult')">
+        <div class="t-display-xs">Need a personalised plan?</div>
+        <div class="t-small" style="margin-top:4px">Book with Dr Nteta</div>
+      </div>
+    </div>
+    <div class="bnav" id="nav-routine"></div>
+  </div>
+</div>
+
+<script>
+const ICONS={
+  home:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+  scan:'<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>',
+  shop:'<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>',
+  consult:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
+  routine:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'
+};
+function buildNav(active){
+  const items=[['home','Home'],['scan','Scan'],['shop','Shop'],['consult','Consult'],['routine','Routine']];
+  return items.map(([id,label])=>`
+    <button class="bnav-item ${id===active?'on':''}" onclick="go('${id}')">
+      <svg viewBox="0 0 24 24">${ICONS[id]}</svg>
+      <span>${label}</span>
+    </button>`).join('');
+}
+['home','scan','results','point','shop','consult','book','routine'].forEach(id=>{
+  const el=document.getElementById('nav-'+id);
+  if(el) el.innerHTML=buildNav(id==='point'||id==='results'||id==='book'?'home':id);
+});
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('s-'+id);
+  if(el) el.classList.add('active');
+  if(id==='scan') setTimeout(startCamera,300);
+  window.scrollTo(0,0);
+}
+let tt;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2800);
+}
+let cart=0;
+function addCart(e){e.stopPropagation();cart++;toast('Added to cart — '+cart+' item'+(cart>1?'s':''));}
+function filt(btn,brand){
+  document.querySelectorAll('.f-chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.shop-card').forEach(c=>{
+    c.style.display=(brand==='all'||c.dataset.b===brand)?'flex':'none';
+  });
+}
+function switchTab(t){
+  document.getElementById('tab-am').classList.toggle('on',t==='am');
+  document.getElementById('tab-pm').classList.toggle('on',t==='pm');
+  document.getElementById('steps-am').style.display=t==='am'?'block':'none';
+  document.getElementById('steps-pm').style.display=t==='pm'?'block':'none';
+}
+let stream=null;
+async function startCamera(){
+  const video=document.getElementById('scanVideo');
+  const ph=document.getElementById('scanPlaceholder');
+  try{
+    if(stream){stream.getTracks().forEach(t=>t.stop());}
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    video.srcObject=stream;
+    ph.style.display='none';
+    toast('Camera ready — frame your concern');
+  }catch(err){
+    ph.innerHTML='Camera unavailable.<br>Use HTTPS / allow permission.<br><br>You can still book a consult.';
+    toast('Camera needs HTTPS or permission');
+  }
+}
+function captureScan(){
+  const video=document.getElementById('scanVideo');
+  const canvas=document.getElementById('scanCanvas');
+  if(!stream||!video.videoWidth){
+    runScan('demo');
+    return;
+  }
+  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0);
+  runScan('capture');
+}
+function runScan(mode){
+  const concerns=['Dryness / barrier','Acne-prone','Sensitivity','Pigmentation'];
+  const pick=concerns[Math.floor(Math.random()*concerns.length)];
+  const html=`
+    <div style="padding:16px 20px 0">
+      <div class="t-eyebrow">Scan result</div>
+      <div class="t-display-sm">${pick}</div>
+      <p class="t-body" style="margin-top:8px">Indicative guidance only. Not a diagnosis.</p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="t-display-xs">Suggested range</div>
+      <div class="t-small" style="margin-top:6px">Kind2Skin / Pimplex / Shavrex products matched to this concern are available in Shop. For persistent or severe issues, book with Dr Nteta.</div>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn-primary" style="width:100%" onclick="go('shop')">View products</button>
+      <button class="btn-outline" style="width:100%" onclick="go('consult')">Book consult</button>
+      <button class="btn-ghost" onclick="go('scan')">Scan again</button>
+    </div>
+    <p class="disclaimer">This tool does not replace clinical assessment by Dr Leslie Nteta.</p>`;
+  document.getElementById('results-body').innerHTML=html;
+  go('results');
+}
+const ZONES={
+  face:[
+    {name:'Botulinum toxin (upper face)',price:'R2 800 – R4 500',desk:'nteta',note:'Glabella / forehead / crow’s feet'},
+    {name:'Chemical peel (superficial)',price:'R1 200 – R2 400',desk:'nteta',note:'Texture & glow'},
+    {name:'Dermal filler (lips / cheeks)',price:'R3 500 – R6 500',desk:'nteta',note:'Per syringe band'},
+    {name:'Skin boosters / biorevitalisation',price:'R2 200 – R3 800',desk:'nteta',note:'Hydration series'}
+  ],
+  neck:[
+    {name:'Neck toxin / Nefertiti',price:'R3 200 – R4 800',desk:'nteta',note:'Banding & lift effect'},
+    {name:'Neck peel / resurfacing',price:'R1 800 – R3 200',desk:'nteta',note:'Texture & pigment'}
+  ],
+  chest:[
+    {name:'Décolletage peel',price:'R1 800 – R3 000',desk:'nteta',note:'Sun damage & texture'},
+    {name:'Chest toxin (selected)',price:'R2 500 – R3 800',desk:'nteta',note:'Smooth appearance'}
+  ],
+  arms:[
+    {name:'Arm skin tightening (energy)',price:'R4 500 – R8 000',desk:'nteta',note:'Course pricing'},
+    {name:'Liposuction – arms',price:'R28 000 – R45 000',desk:'plastic',note:'Surgical – Pretoria plastic desk'}
+  ],
+  abs:[
+    {name:'Abdominal liposuction',price:'R35 000 – R55 000',desk:'plastic',note:'Surgical quote'},
+    {name:'Tummy tuck (abdominoplasty)',price:'R55 000 – R85 000',desk:'plastic',note:'Full / mini options'},
+    {name:'Non-surgical body contouring',price:'R3 500 – R7 500',desk:'nteta',note:'Per session band'}
+  ],
+  hips:[
+    {name:'Love-handle lipo',price:'R30 000 – R48 000',desk:'plastic',note:'Surgical'},
+    {name:'BBL / fat transfer consult',price:'R45 000 – R75 000',desk:'plastic',note:'Surgical package band'}
+  ],
+  thighs:[
+    {name:'Thigh liposuction',price:'R32 000 – R52 000',desk:'plastic',note:'Surgical'},
+    {name:'Thigh lift',price:'R50 000 – R80 000',desk:'plastic',note:'Surgical'}
+  ]
+};
+let currentQuote=null;
+function selectZone(el){
+  document.querySelectorAll('.zone').forEach(z=>z.classList.remove('on'));
+  el.classList.add('on');
+  const zone=el.dataset.zone;
+  const list=ZONES[zone]||[];
+  const html=list.map(p=>`
+    <div class="pzone-card" onclick='pickProcedure(${JSON.stringify(p)})'>
+      <div class="t-display-xs" style="font-size:15px">${p.name}</div>
+      <div class="t-price" style="margin:6px 0 2px">${p.price}</div>
+      <div class="t-small">${p.note}</div>
+      <span class="desk ${p.desk==='nteta'?'desk-nteta':'desk-plastic'}">
+        ${p.desk==='nteta'?'Dr Nteta desk':'Pretoria plastic desk'}
+      </span>
+    </div>`).join('');
+  document.getElementById('pzoneList').innerHTML=html||'<p class="t-body" style="text-align:center">No procedures listed for this zone yet.</p>';
+}
+function pickProcedure(p){
+  currentQuote=p;
+  document.getElementById('quoteBanner').style.display='block';
+  document.getElementById('quoteTitle').textContent=p.name;
+  document.getElementById('quoteMeta').textContent=
+    p.price+' · '+(p.desk==='nteta'?'Dr Nteta desk':'Pretoria plastic desk')+' · Estimate only';
+  document.getElementById('bk-notes').value=
+    `POINT quote request: ${p.name}\nPrice band: ${p.price}\nDesk: ${p.desk==='nteta'?'Dr Nteta':'Pretoria plastic'}\n${p.note}`;
+  go('book');
+  toast('Quote loaded — complete form or WhatsApp');
+}
+const WA_NUMBER='27123207901';
+function openWhatsApp(text){
+  const url='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(text);
+  window.open(url,'_blank');
+}
+function buildMessage(){
+  const name=(document.getElementById('bk-name').value||'').trim();
+  const phone=(document.getElementById('bk-phone').value||'').trim();
+  const loc=document.getElementById('bk-loc').value;
+  const notes=(document.getElementById('bk-notes').value||'').trim();
+  let msg='Dr Nteta Skin App — booking / quote request\n';
+  if(name) msg+='Name: '+name+'\n';
+  if(phone) msg+='Mobile: '+phone+'\n';
+  msg+='Location preference: '+loc+'\n';
+  if(currentQuote){
+    msg+='\nPOINT procedure: '+currentQuote.name+
+         '\nPrice band: '+currentQuote.price+
+         '\nDesk: '+(currentQuote.desk==='nteta'?'Dr Nteta':'Pretoria plastic')+'\n';
+  }
+  if(notes) msg+='\nNotes:\n'+notes;
+  msg+='\n\n(Estimate only — not an invoice. Awaiting clinic confirmation.)';
+  return msg;
+}
+function submitBook(){
+  const name=document.getElementById('bk-name').value.trim();
+  if(!name){toast('Please enter your name');return;}
+  toast('Request noted — please also send via WhatsApp so the desk receives it');
+  setTimeout(()=>openWhatsApp(buildMessage()),600);
+}
+function submitWhatsApp(){
+  openWhatsApp(buildMessage());
+  toast('Opening WhatsApp…');
+}
+</script>
+</body>
+</html>
