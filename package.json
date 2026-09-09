@@ -1,0 +1,1 @@
+{"name":"dr-nteta-skin-app","private":true,"scripts":{"build":"node build.js","assemble":"node build.js"}}
