@@ -1,0 +1,7 @@
+'razor','pigment'];toast('Analysing…');setTimeout(()=>run(k[Math.floor(Math.random()*k.length)]),400)}
+function run(k){res(k)}
+function oz(z){const zone=Z[z];ZP=zone.p;document.getElementById('zt').textContent=zone.t;document.getElementById('zb').innerHTML=zone.p.map((p,i)=>`<button class="card bb" style="text-align:left" onclick="sel(${i})"><b>${p[0]}</b><div class="mu">Estimate ${p[1]}</div><div class="ey">${p[2]}</div></button>`).join('')+'<div class="disc">Estimates only — not invoices.</div>';go('pzone')}
+function sel(i){LQ={n:ZP[i][0],b:ZP[i][1],d:ZP[i][2]};document.getElementById('zb').innerHTML=`<div class="card"><div class="ey">Estimate quote</div><div class="h" style="font-size:16px">${LQ.n}</div><div style="font:800 18px Montserrat;color:var(--b);margin:6px 0">${LQ.b}</div><div class="mu">Desk: <b>${LQ.d}</b></div><div class="disc">Planning estimate — not an invoice.</div><button class="btn bp bb" style="margin-top:8px" onclick="bq()">1) Book consult</button><button class="btn bc bb" style="margin-top:6px" onclick="wq()">2) WhatsApp</button><button class="btn bo bb" style="margin-top:6px" onclick="go('point')">Back</button></div>`}
+function bq(){document.getElementById('notes').value=LQ.n+' · estimate '+LQ.b;document.getElementById('desk').value=LQ.d;go('book')}
+function wq(){open(WA+'?text='+encodeURIComponent(`POINT quote:\nProcedure: ${LQ.n}\nPrice band: ${LQ.b}\nDesk: ${LQ.d}\nPlease advise on a consult.`),'_blank')}
+function pref(a,d){document.getElementById('
