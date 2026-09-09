@@ -1,0 +1,4 @@
+s').value=a;document.getElementById('desk').value=d;go('book')}
+function sub(e){e.preventDefault();toast('Booking request sent')}
+function bwa(){open(WA+'?text='+encodeURIComponent(`Booking\nName: ${n.value}\nPhone: ${p.value}\nLocation: ${l.value}\nDesk: ${desk.value}\nNotes: ${notes.value}`),'_blank')}
+nav()</script></body></html>
