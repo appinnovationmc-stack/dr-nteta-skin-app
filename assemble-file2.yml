@@ -1,0 +1,16 @@
+name: Assemble File-2
+on: [push, workflow_dispatch]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node build.js
+      - run: echo 9a7e8a3b9f5ae913736d3ff1be837db9b57c60e85a77bf369c55caebe25b0ed9  index.html | sha256sum -c -
+      - run: |
+          git config user.name file2-restore-bot
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html DrNtetaSkinApp.html originals/DrNtetaSkinApp-2.html
+          git diff --cached --quiet || (git commit -m "restore: byte-faithful File-2 HTML from attachment" && git push)
