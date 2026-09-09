@@ -1,0 +1,1 @@
+const fs=require('fs');const z=require('zlib');const b=Buffer.from(fs.readFileSync('payload.gz.b64','utf8'),'base64');const h=z.gunzipSync(b);fs.writeFileSync('index.html',h);fs.writeFileSync('DrNtetaSkinApp.html',h);fs.mkdirSync('originals',{recursive:true});fs.writeFileSync('originals/DrNtetaSkinApp-2.html',h);console.log('assembled',h.length);
